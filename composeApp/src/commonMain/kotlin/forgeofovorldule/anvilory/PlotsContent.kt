@@ -91,7 +91,7 @@ fun PlotsContent(viewModel: AppViewModel) {
                     horizontalArrangement = Arrangement.spacedBy(7.2.dp)
                 ) {
                     IconButton(onClick = {
-                        saveAllValues()
+                        SaveManager.save()
                         //export()
                     }) {
                         Image(
@@ -102,7 +102,7 @@ fun PlotsContent(viewModel: AppViewModel) {
                         )
                     }
                     IconButton(onClick = {
-                        saveAllValues()
+                        SaveManager.save()
                         //import {
                         //    viewModel.setStatus(AppStatus.LOADING)
                         //}
@@ -125,7 +125,7 @@ fun PlotsContent(viewModel: AppViewModel) {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = language.toString(),
+                            text = SaveManager.data.language.toString(),
                             color = UIC_light,
                             fontWeight = FontWeight.Normal,
                             fontFamily = JetBrainsFont(),
@@ -147,8 +147,8 @@ fun PlotsContent(viewModel: AppViewModel) {
                                     modifier = Modifier.size(35.6.dp)
                                         .background(UIC_extra_light, RoundedCornerShape(35.6.dp))
                                         .clickable {
-                                            language = languageItem
-                                            saveAllValues()
+                                            SaveManager.data.language = languageItem
+                                            SaveManager.save()
                                             expended = false
                                             viewModel.setStatus(AppStatus.LOADING)
                                         },
@@ -174,7 +174,7 @@ fun PlotsContent(viewModel: AppViewModel) {
                 modifier = Modifier.verticalScroll(rememberScrollState())
                     .padding(horizontal = 19.6.dp)
             ) {
-                for (item in plots.indices) {
+                for (item in SaveManager.data.plots.indices) {
                     OnePlotBlock(item, viewModel)
                 }
             }
@@ -184,7 +184,7 @@ fun PlotsContent(viewModel: AppViewModel) {
 
 @Composable
 private fun OnePlotBlock(index: Int, viewModel: AppViewModel) {
-    val plot = plots[index]
+    val plot = SaveManager.data.plots[index]
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(10.4.dp),
@@ -550,7 +550,8 @@ private fun CreatePlotDialog(viewModel: AppViewModel) {
                     Box(
                         Modifier.clickable {
                             show = false
-                            plots.add(plot)
+                            SaveManager.data.plots.add(plot)
+                            SaveManager.save()
                             viewModel.setStatus(AppStatus.PLOTS_UPDATER)
                         }
                             .background(UIC, RoundedCornerShape(18.8.dp))

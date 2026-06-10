@@ -9,9 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate() {
         enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
+        super.onCreate()
+        AppContext.context = this
 
         setContent {
             val viewModel = remember { AppViewModel() }
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
     override fun onStop() {
         super.onStop()
         if (loadingIsGood)
-            saveAllValues()
+            SaveManager.save()
     }
 }
 

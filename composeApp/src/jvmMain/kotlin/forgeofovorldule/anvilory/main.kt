@@ -9,7 +9,7 @@ fun main() = application {
     Window(
         onCloseRequest = {
             if (loadingIsGood)
-                saveAllValues()
+                SaveManager.save()
             exitApplication()
         },
         title = "Anvilory",

@@ -50,7 +50,7 @@ var edit_plot = 0
 
 @Composable
 fun ChaptersContent(viewModel: AppViewModel) {
-    val plot = plots[edit_plot]
+    val plot = SaveManager.data.plots[edit_plot]
     Box(
         modifier = Modifier.fillMaxSize()
             .background(UIC_light)
@@ -108,7 +108,7 @@ fun ChaptersContent(viewModel: AppViewModel) {
                 modifier = Modifier.verticalScroll(rememberScrollState())
                     .padding(horizontal = 19.6.dp)
             ) {
-                for (item in 0..<plot.chapters.size) {
+                for (item in plot.chapters.indices) {
                     OneChapterBlock(item, viewModel)
                 }
             }
@@ -118,7 +118,7 @@ fun ChaptersContent(viewModel: AppViewModel) {
 
 @Composable
 private fun OneChapterBlock(index: Int, viewModel: AppViewModel) {
-    val chapter = plots[edit_plot].chapters[index]
+    val chapter = SaveManager.data.plots[edit_plot].chapters[index]
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(10.4.dp),
@@ -185,7 +185,7 @@ private fun OneChapterBlock(index: Int, viewModel: AppViewModel) {
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            for (index in 0..<chapter.parts.size) {
+            for ((index, element) in chapter.parts.withIndex()) {
                 Text(
                     text = "$ts_Part ${index + 1}:",
                     color = UIC_light,
@@ -195,7 +195,7 @@ private fun OneChapterBlock(index: Int, viewModel: AppViewModel) {
                     fontSize = 13.2.sp
                 )
                 Text(
-                    text = chapter.parts[index].text,
+                    text = element.text,
                     color = UIC_light,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Normal,
@@ -234,7 +234,7 @@ private fun CreateChapterDialog(viewModel: AppViewModel) {
             onDismissRequest = { show = false },
             title = {
                 Text(
-                    text = if (plots[edit_plot].typeOfPlot == TypeOfPlot.STORY) ts_Create_a_chapter else ts_Create_a_series,
+                    text = if (SaveManager.data.plots[edit_plot].typeOfPlot == TypeOfPlot.STORY) ts_Create_a_chapter else ts_Create_a_series,
                     color = UIC,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -296,7 +296,7 @@ private fun CreateChapterDialog(viewModel: AppViewModel) {
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp)
                             ) {
-                                for (index in 0..<chapter.parts.size) {
+                                for ((index, element) in chapter.parts.withIndex()) {
                                     Text(
                                         text = "$ts_Part $index:",
                                         color = UIC_light,
@@ -306,7 +306,7 @@ private fun CreateChapterDialog(viewModel: AppViewModel) {
                                         fontSize = 13.2.sp
                                     )
                                     Text(
-                                        text = chapter.parts[index].text,
+                                        text = element.text,
                                         color = UIC_light,
                                         overflow = TextOverflow.Ellipsis,
                                         fontWeight = FontWeight.Normal,
@@ -363,9 +363,10 @@ private fun CreateChapterDialog(viewModel: AppViewModel) {
                     Box(
                         Modifier.clickable {
                             show = false
-                            plots[edit_plot].chapters.add(chapter)
-                            plots[edit_plot].lastEdit =
+                            SaveManager.data.plots[edit_plot].chapters.add(chapter)
+                            SaveManager.data.plots[edit_plot].lastEdit =
                                 Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+                            SaveManager.save()
                             viewModel.setStatus(AppStatus.CHAPTERS_UPDATER)
                         }
                             .background(UIC, RoundedCornerShape(18.8.dp))

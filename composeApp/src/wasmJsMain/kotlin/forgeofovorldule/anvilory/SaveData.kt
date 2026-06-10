@@ -9,10 +9,17 @@
 
 package forgeofovorldule.anvilory
 
-import kotlinx.serialization.Serializable
+import kotlinx.browser.window
 
-@Serializable
-enum class Languages {
-    EN,
-    RU
+actual object SaveStorage {
+
+    private const val KEY = "save"
+
+    actual fun load(): String? {
+        return window.localStorage.getItem(KEY)
+    }
+
+    actual fun save(data: String) {
+        window.localStorage.setItem(KEY, data)
+    }
 }

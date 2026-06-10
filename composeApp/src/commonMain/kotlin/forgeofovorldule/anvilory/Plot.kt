@@ -13,7 +13,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 class Plot(
     var title: String = ts_New_plot,
     var description: String = ts_This_is_an_example_story,

@@ -48,7 +48,7 @@ var edit_chapter = 0
 
 @Composable
 fun PartsContent(viewModel: AppViewModel) {
-    val chapter = plots[edit_plot].chapters[edit_chapter]
+    val chapter = SaveManager.data.plots[edit_plot].chapters[edit_chapter]
     Box(
         modifier = Modifier.fillMaxSize()
             .background(UIC_light)
@@ -89,7 +89,7 @@ fun PartsContent(viewModel: AppViewModel) {
                     contentAlignment = Alignment.Center
                 ) {
                     StartEllipsisText(
-                        text = plots[edit_plot].title + " / " + chapter.title,
+                        text = SaveManager.data.plots[edit_plot].title + " / " + chapter.title,
                         color = UIC_extra_dark,
                         maxLines = 1,
                         fontWeight = FontWeight.ExtraBold,
@@ -103,12 +103,13 @@ fun PartsContent(viewModel: AppViewModel) {
                         .background(UIC_extra_light, RoundedCornerShape(35.6.dp))
                         .clip(RoundedCornerShape(35.6.dp))
                         .clickable {
-                            plots[edit_plot].chapters[edit_chapter].parts.add(Part())
+                            SaveManager.data.plots[edit_plot].chapters[edit_chapter].parts.add(Part())
                             viewModel.setStatus(AppStatus.PARTS_UPDATER)
-                            plots[edit_plot].chapters[edit_chapter].lastEdit =
+                            SaveManager.data.plots[edit_plot].chapters[edit_chapter].lastEdit =
                                 Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-                            plots[edit_plot].lastEdit =
+                            SaveManager.data.plots[edit_plot].lastEdit =
                                 Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+                            SaveManager.save()
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -126,7 +127,7 @@ fun PartsContent(viewModel: AppViewModel) {
                 verticalArrangement = Arrangement.spacedBy(24.8.dp),
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
-                for (item in 0..<chapter.parts.size) {
+                for (item in chapter.parts.indices) {
                     OnePartBlock(item)
                 }
             }
@@ -136,7 +137,7 @@ fun PartsContent(viewModel: AppViewModel) {
 
 @Composable
 private fun OnePartBlock(index: Int) {
-    val part = plots[edit_plot].chapters[edit_chapter].parts[index]
+    val part = SaveManager.data.plots[edit_plot].chapters[edit_chapter].parts[index]
     var partText by remember { mutableStateOf(part.text) }
 
     Column(
@@ -201,12 +202,13 @@ private fun OnePartBlock(index: Int) {
             value = partText,
             onValueChange = {
                 partText = it
-                plots[edit_plot].chapters[edit_chapter].parts[index].text = it
-                plots[edit_plot].chapters[edit_chapter].parts[index].lastEdit =
+                SaveManager.data.plots[edit_plot].chapters[edit_chapter].parts[index].text = it
+                SaveManager.data.plots[edit_plot].chapters[edit_chapter].parts[index].lastEdit =
                     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-                plots[edit_plot].chapters[edit_chapter].lastEdit =
+                SaveManager.data.plots[edit_plot].chapters[edit_chapter].lastEdit =
                     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-                plots[edit_plot].lastEdit = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+                SaveManager.data.plots[edit_plot].lastEdit = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+                SaveManager.save()
             },
             modifier = Modifier.fillMaxWidth(),
             textStyle = TextStyle(

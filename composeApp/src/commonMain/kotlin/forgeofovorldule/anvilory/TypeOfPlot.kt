@@ -9,6 +9,9 @@
 
 package forgeofovorldule.anvilory
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class TypeOfPlot {
     STORY,
     MOVIE

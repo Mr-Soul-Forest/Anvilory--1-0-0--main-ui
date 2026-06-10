@@ -13,7 +13,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 class Chapter(
     var title: String = ts_New_chapter
 ) {

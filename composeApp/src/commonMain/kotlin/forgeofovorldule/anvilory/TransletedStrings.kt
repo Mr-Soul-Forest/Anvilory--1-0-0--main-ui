@@ -34,7 +34,7 @@ var ts_Export = "Export"
 var ts_Import = "Import"
 
 fun changeLanguage() {
-    if (language == Languages.RU) {
+    if (SaveManager.data.language == Languages.RU) {
         ts_New_plot = "Новый сюжет"
         ts_This_is_an_example_story = "Это пример истории"
         ts_New_chapter = "Новая глава"
